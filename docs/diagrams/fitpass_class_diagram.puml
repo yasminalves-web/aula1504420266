@@ -1,0 +1,158 @@
+@startuml FitPass_ClassDiagram
+
+title FitPass Gym Management — Diagrama de Classes
+
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+skinparam classBackgroundColor #EEEDFE
+skinparam classBorderColor #534AB7
+skinparam classArrowColor #3C3489
+skinparam classFontColor #26215C
+skinparam classHeaderBackgroundColor #AFA9EC
+skinparam shadowing false
+skinparam linetype ortho
+
+' =====================
+' ENTIDADES DE DOMÍNIO
+' =====================
+
+class Aluno {
+  +Long idAluno
+  +String nome
+  +String cpf
+  +String email
+  +String telefone
+  +String endereco
+  +String rfid
+  +String status
+  --
+  +verificarRegularidade() : Boolean
+}
+
+class Plano {
+  +Long idPlano
+  +String nome
+  +String tipo
+  +Double valor
+  +Boolean ativo
+}
+
+class Pagamento {
+  +Long idPagamento
+  +Date data
+  +Double valor
+  +String formaPagamento
+  +String status
+}
+
+class Acesso {
+  +Long idAcesso
+  +DateTime dataHora
+  +Boolean autorizado
+}
+
+class Aula {
+  +Long idAula
+  +String nome
+  +String horario
+  +Integer capacidadeMaxima
+}
+
+class Agendamento {
+  +Long idAgendamento
+  +Date dataReserva
+  +String status
+}
+
+class Presenca {
+  +Long idPresenca
+  +Date data
+  +Boolean presente
+}
+
+class AvaliacaoFisica {
+  +Long idAvaliacao
+  +Date data
+  +Double peso
+  +Double imc
+  +Double percentualGordura
+  +String observacoes
+  +String anexo
+}
+
+class Notificacao {
+  +Long idNotificacao
+  +String tipo
+  +Date dataEnvio
+  +String status
+  +String mensagem
+}
+
+' =====================
+' ATORES DO SISTEMA
+' =====================
+
+class Recepcionista {
+  +Long idRecepcionista
+  +String nome
+  --
+  +cadastrarAluno() : void
+  +registrarPagamento() : void
+}
+
+class Instrutor {
+  +Long idInstrutor
+  +String nome
+  +String especialidade
+  --
+  +registrarPresenca() : void
+  +registrarAvaliacao() : void
+}
+
+class Gerente {
+  +Long idGerente
+  +String nome
+  --
+  +gerenciarPlanos() : void
+  +emitirRelatorio() : void
+}
+
+' =====================
+' RELACIONAMENTOS
+' =====================
+
+' RF01 — Cadastro de Alunos
+Aluno "1" --> "1" Plano : contrata >
+
+' RF03 — Controle de Pagamentos
+Aluno "1" --> "*" Pagamento : realiza >
+
+' RF05 — Controle de Acesso
+Aluno "1" --> "*" Acesso : gera >
+
+' RF06 — Agendamento de Aulas
+Aluno "1" --> "*" Agendamento : agenda >
+Agendamento "*" --> "1" Aula : referencia >
+
+' RF07 — Lista de Presença
+Aula "1" --> "*" Presenca : registra >
+Instrutor "1" --> "*" Presenca : lanca >
+
+' RF08 — Avaliação Física
+Aluno "1" --> "*" AvaliacaoFisica : possui >
+Instrutor "1" --> "*" AvaliacaoFisica : realiza >
+
+' RF10 — Notificações
+Aluno "1" --> "*" Notificacao : recebe >
+
+' RF01 / RF03 — Recepcionista
+Recepcionista "1" --> "*" Aluno : cadastra >
+Recepcionista "1" --> "*" Pagamento : registra >
+
+' RF02 / RF09 — Gerente
+Gerente "1" --> "*" Plano : gerencia >
+
+' RF07 / RF08 — Instrutor
+Instrutor "1" --> "*" Aula : ministra >
+
+@enduml
