@@ -83,10 +83,6 @@ fitpass-gym-management/
 
 ---
 
-##  Ferramentas Utilizadas
-
-- [PlantUML](https://plantuml.com) — geração do diagrama de classes
-- [PlantUML Online Server](https://www.plantuml.com/plantuml) — visualização e exportação
 
 ---
 
